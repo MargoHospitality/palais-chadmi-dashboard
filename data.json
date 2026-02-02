@@ -52,6 +52,12 @@
         "OTA": 1633135.79,
         "Direct": 431713.17
       },
+      "lead_time_distribution": {
+        "J-7": 114,
+        "J-30": 134,
+        "J-60": 101,
+        "J-90+": 103
+      },
       "kpis": {
         "total_revenue": 2064848.96,
         "total_bookings": 452,
@@ -94,6 +100,12 @@
         "OTA": 2707369.63,
         "Direct": 264143.33
       },
+      "lead_time_distribution": {
+        "J-7": 142,
+        "J-30": 170,
+        "J-60": 153,
+        "J-90+": 122
+      },
       "kpis": {
         "total_revenue": 2971512.96,
         "total_bookings": 587,
@@ -135,6 +147,12 @@
       "source_split": {
         "OTA": 947580.84,
         "Direct": 59668.39
+      },
+      "lead_time_distribution": {
+        "J-7": 35,
+        "J-30": 42,
+        "J-60": 57,
+        "J-90+": 97
       },
       "kpis": {
         "total_revenue": 1007249.23,

@@ -33,7 +33,7 @@
 
         header {
             background: white;
-            padding: 40px 30px;
+            padding: 20px 30px;
             border-radius: 15px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.1);
             margin-bottom: 20px;
@@ -41,14 +41,14 @@
         }
 
         .logo {
-            width: 200px;
+            width: 120px;
             height: auto;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
         }
 
         h1 {
             color: var(--grey);
-            font-size: 2em;
+            font-size: 1.8em;
             font-weight: 300;
             letter-spacing: 2px;
         }
@@ -56,19 +56,20 @@
         .disclaimer {
             background: white;
             border-left: 4px solid var(--gold);
-            padding: 20px 25px;
-            margin: 0 0 30px;
+            padding: 15px 20px;
+            margin: 0 auto 30px;
+            max-width: 900px;
             border-radius: 10px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-            font-size: 0.95em;
-            line-height: 1.7;
+            font-size: 0.9em;
+            line-height: 1.6;
             color: var(--dark-grey);
         }
 
         .disclaimer strong {
             display: block;
             margin-bottom: 8px;
-            font-size: 1.05em;
+            font-size: 1em;
             color: var(--gold);
         }
 
@@ -211,8 +212,7 @@
 
         <div class="disclaimer">
             <strong>📊 Scope des données</strong>
-            <strong>Périmètre hébergement uniquement :</strong> Les données présentées concernent exclusivement les revenus hébergement. Les prestations F&B (food & beverage) et services annexes font l'objet d'une facturation manuelle et ne sont pas consolidées dans le PMS.<br><br>
-            <strong>Migration PMS :</strong> Nous avons mené une migration de notre PMS en décembre 2025 passant de Checkfront à Cloudbeds. Les données passées reprises par la migration ne concernent que les réservations ayant transité par le Channel Manager. Sont exclus : les réservations agences, les walk-in ou prolongation de séjour manuelle. Impact occupancy estimé à 8-10%.
+            Les données présentées concernent exclusivement les revenus hébergement. Les prestations F&B et services annexes font l'objet d'une facturation manuelle et ne sont pas consolidées dans le PMS. Nous avons mené une migration de notre PMS en décembre 2025 passant de Checkfront à Cloudbeds. Les données reprises ne concernent que les réservations ayant transité par le Channel Manager. Sont exclus : les réservations agences, les walk-in ou prolongation de séjour manuelle. Impact occupancy estimé à 8-10%.
         </div>
 
         <div class="tabs">
@@ -260,6 +260,10 @@
                     <div class="chart-title">Distribution par Source 2024</div>
                     <canvas id="chart-2024-source"></canvas>
                 </div>
+                <div class="chart-container">
+                    <div class="chart-title">Distribution Lead Time 2024</div>
+                    <canvas id="chart-2024-leadtime"></canvas>
+                </div>
             </div>
         </div>
 
@@ -301,6 +305,10 @@
                     <div class="chart-title">Distribution par Source 2025</div>
                     <canvas id="chart-2025-source"></canvas>
                 </div>
+                <div class="chart-container">
+                    <div class="chart-title">Distribution Lead Time 2025</div>
+                    <canvas id="chart-2025-leadtime"></canvas>
+                </div>
             </div>
         </div>
 
@@ -341,6 +349,10 @@
                 <div class="chart-container">
                     <div class="chart-title">Distribution par Source 2026</div>
                     <canvas id="chart-2026-source"></canvas>
+                </div>
+                <div class="chart-container">
+                    <div class="chart-title">Distribution Lead Time 2026</div>
+                    <canvas id="chart-2026-leadtime"></canvas>
                 </div>
             </div>
         </div>
@@ -461,6 +473,7 @@
                 createRevenueChart(year, yearData);
                 createBookingsChart(year, yearData);
                 createSourceChart(year, yearData);
+                createLeadTimeChart(year, yearData);
             });
 
             // Consolidated KPIs with variations
@@ -598,7 +611,7 @@
                             yoy['2025'].revenue,
                             yoy['2026'].revenue
                         ],
-                        backgroundColor: ['#D4AF37', '#B8941F', '#757575']
+                        backgroundColor: ['#C5A572', '#D4AF37', '#8B7355']
                     }]
                 },
                 options: {
@@ -643,7 +656,7 @@
                             yoy['2025'].bookings,
                             yoy['2026'].bookings
                         ],
-                        backgroundColor: ['#D4AF37', '#B8941F', '#757575']
+                        backgroundColor: ['#C5A572', '#D4AF37', '#8B7355']
                     }]
                 },
                 options: {
@@ -691,29 +704,73 @@
             });
         }
 
-        function createLeadTimeDistributionChart() {
-            const cons = dashboardData.consolidated;
-            const ctx = document.getElementById('chart-cons-leadtime').getContext('2d');
-            charts['cons-leadtime'] = new Chart(ctx, {
+        function createLeadTimeChart(year, data) {
+            const ctx = document.getElementById(`chart-${year}-leadtime`).getContext('2d');
+            const dist = data.lead_time_distribution;
+            const total = dist['J-7'] + dist['J-30'] + dist['J-60'] + dist['J-90+'];
+            
+            charts[`${year}-leadtime`] = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: ['J-7', 'J-30', 'J-60', 'J-90+'],
                     datasets: [{
-                        label: 'Nombre de réservations',
-                        data: [
-                            cons.lead_time_distribution['J-7'],
-                            cons.lead_time_distribution['J-30'],
-                            cons.lead_time_distribution['J-60'],
-                            cons.lead_time_distribution['J-90+']
-                        ],
-                        backgroundColor: ['#f56565', '#ed8936', '#D4AF37', '#48bb78']
+                        label: 'Réservations',
+                        data: [dist['J-7'], dist['J-30'], dist['J-60'], dist['J-90+']],
+                        backgroundColor: ['#8B7355', '#A0826D', '#D4AF37', '#C5A572']
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: true,
                     plugins: {
-                        legend: { display: false }
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const value = context.parsed.y;
+                                    const percentage = ((value / total) * 100).toFixed(1);
+                                    return `${value} réservations (${percentage}%)`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+        }
+
+        function createLeadTimeDistributionChart() {
+            const cons = dashboardData.consolidated;
+            const ctx = document.getElementById('chart-cons-leadtime').getContext('2d');
+            const dist = cons.lead_time_distribution;
+            const total = dist['J-7'] + dist['J-30'] + dist['J-60'] + dist['J-90+'];
+            
+            charts['cons-leadtime'] = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['J-7', 'J-30', 'J-60', 'J-90+'],
+                    datasets: [{
+                        label: 'Réservations',
+                        data: [dist['J-7'], dist['J-30'], dist['J-60'], dist['J-90+']],
+                        backgroundColor: ['#8B7355', '#A0826D', '#D4AF37', '#C5A572']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const value = context.parsed.y;
+                                    const percentage = ((value / total) * 100).toFixed(1);
+                                    return `${value} réservations (${percentage}%)`;
+                                }
+                            }
+                        }
                     },
                     scales: {
                         y: { beginAtZero: true }
