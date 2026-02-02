@@ -33,24 +33,26 @@
 
         header {
             background: white;
-            padding: 20px 30px;
+            padding: 15px 30px;
             border-radius: 15px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.1);
             margin-bottom: 20px;
-            text-align: center;
+            display: flex;
+            align-items: center;
+            gap: 20px;
         }
 
         .logo {
-            width: 120px;
+            width: 60px;
             height: auto;
-            margin-bottom: 10px;
         }
 
         h1 {
             color: var(--grey);
-            font-size: 1.8em;
-            font-weight: 300;
-            letter-spacing: 2px;
+            font-size: 1.4em;
+            font-weight: 400;
+            letter-spacing: 1px;
+            margin: 0;
         }
 
         .disclaimer {
@@ -193,12 +195,18 @@
                 grid-template-columns: 1fr;
             }
 
+            header {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+
             h1 {
-                font-size: 1.5em;
+                font-size: 1.1em;
             }
 
             .logo {
-                width: 150px;
+                width: 50px;
             }
         }
     </style>
@@ -206,8 +214,8 @@
 <body>
     <div class="container">
         <header>
-            <img src="logo.jpg" alt="Palais Chadmi" class="logo">
-            <h1>PERFORMANCE DASHBOARD</h1>
+            <img src="logo.png" alt="Palais Chadmi" class="logo">
+            <h1>Palais Chadmi - Performance Dashboard (2024-2026)</h1>
         </header>
 
         <div class="disclaimer">
