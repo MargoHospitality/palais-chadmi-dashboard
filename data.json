@@ -64,8 +64,23 @@
         "total_nights": 1240,
         "avg_adr": 1665.2,
         "avg_los": 2.74,
-        "avg_lead_time": 39.1
-      }
+        "avg_lead_time": 39.1,
+        "avg_occupancy": 54.97
+      },
+      "occupancy": [
+        55.24,
+        63.79,
+        59.27,
+        50.83,
+        64.52,
+        45.42,
+        4.44,
+        30.65,
+        55.83,
+        68.55,
+        82.92,
+        78.23
+      ]
     },
     "2025": {
       "revenue": [
@@ -112,8 +127,23 @@
         "total_nights": 1672,
         "avg_adr": 1777.22,
         "avg_los": 2.85,
-        "avg_lead_time": 40.6
-      }
+        "avg_lead_time": 40.6,
+        "avg_occupancy": 64.92
+      },
+      "occupancy": [
+        80.24,
+        87.5,
+        65.73,
+        90.83,
+        83.06,
+        51.25,
+        11.69,
+        37.1,
+        42.08,
+        78.23,
+        76.67,
+        74.6
+      ]
     },
     "2026": {
       "revenue": [
@@ -160,8 +190,23 @@
         "total_nights": 750,
         "avg_adr": 1343.0,
         "avg_los": 3.25,
-        "avg_lead_time": 66.0
-      }
+        "avg_lead_time": 66.0,
+        "avg_occupancy": 32.71
+      },
+      "occupancy": [
+        80.24,
+        73.21,
+        61.69,
+        49.17,
+        16.53,
+        4.17,
+        0,
+        0,
+        2.08,
+        6.85,
+        0.42,
+        0
+      ]
     }
   },
   "consolidated": {
@@ -211,6 +256,7 @@
         "month": "Apr",
         "revenue": 670841.15
       }
-    ]
+    ],
+    "avg_occupancy": 52.52
   }
 }

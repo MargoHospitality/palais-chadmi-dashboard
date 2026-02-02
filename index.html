@@ -251,6 +251,10 @@
                     <div class="kpi-value" id="kpi-2024-los">-</div>
                 </div>
                 <div class="kpi-card">
+                    <div class="kpi-label">Occupation Moyenne</div>
+                    <div class="kpi-value" id="kpi-2024-occupancy">-</div>
+                </div>
+                <div class="kpi-card">
                     <div class="kpi-label">Lead Time Moyen</div>
                     <div class="kpi-value" id="kpi-2024-leadtime">-</div>
                 </div>
@@ -260,6 +264,10 @@
                 <div class="chart-container">
                     <div class="chart-title">CA Hébergement Mensuel 2024</div>
                     <canvas id="chart-2024-revenue"></canvas>
+                </div>
+                <div class="chart-container">
+                    <div class="chart-title">Taux d'Occupation Mensuel 2024</div>
+                    <canvas id="chart-2024-occupancy"></canvas>
                 </div>
                 <div class="chart-container">
                     <div class="chart-title">Réservations Mensuelles 2024</div>
@@ -296,6 +304,10 @@
                     <div class="kpi-value" id="kpi-2025-los">-</div>
                 </div>
                 <div class="kpi-card">
+                    <div class="kpi-label">Occupation Moyenne</div>
+                    <div class="kpi-value" id="kpi-2025-occupancy">-</div>
+                </div>
+                <div class="kpi-card">
                     <div class="kpi-label">Lead Time Moyen</div>
                     <div class="kpi-value" id="kpi-2025-leadtime">-</div>
                 </div>
@@ -305,6 +317,10 @@
                 <div class="chart-container">
                     <div class="chart-title">CA Hébergement Mensuel 2025</div>
                     <canvas id="chart-2025-revenue"></canvas>
+                </div>
+                <div class="chart-container">
+                    <div class="chart-title">Taux d'Occupation Mensuel 2025</div>
+                    <canvas id="chart-2025-occupancy"></canvas>
                 </div>
                 <div class="chart-container">
                     <div class="chart-title">Réservations Mensuelles 2025</div>
@@ -341,6 +357,10 @@
                     <div class="kpi-value" id="kpi-2026-los">-</div>
                 </div>
                 <div class="kpi-card">
+                    <div class="kpi-label">Occupation Moyenne</div>
+                    <div class="kpi-value" id="kpi-2026-occupancy">-</div>
+                </div>
+                <div class="kpi-card">
                     <div class="kpi-label">Lead Time Moyen</div>
                     <div class="kpi-value" id="kpi-2026-leadtime">-</div>
                 </div>
@@ -350,6 +370,10 @@
                 <div class="chart-container">
                     <div class="chart-title">CA Hébergement Mensuel 2026 (YTD)</div>
                     <canvas id="chart-2026-revenue"></canvas>
+                </div>
+                <div class="chart-container">
+                    <div class="chart-title">Taux d'Occupation Mensuel 2026 (YTD)</div>
+                    <canvas id="chart-2026-occupancy"></canvas>
                 </div>
                 <div class="chart-container">
                     <div class="chart-title">Réservations Mensuelles 2026 (YTD)</div>
@@ -386,12 +410,20 @@
                     <div class="kpi-value" id="kpi-cons-los">-</div>
                 </div>
                 <div class="kpi-card">
+                    <div class="kpi-label">Occupation Moyenne</div>
+                    <div class="kpi-value" id="kpi-cons-occupancy">-</div>
+                </div>
+                <div class="kpi-card">
                     <div class="kpi-label">Lead Time Moyen</div>
                     <div class="kpi-value" id="kpi-cons-leadtime">-</div>
                 </div>
             </div>
 
             <div class="chart-grid">
+                <div class="chart-container">
+                    <div class="chart-title">Évolution Occupation par Année</div>
+                    <canvas id="chart-cons-yoy-occupancy"></canvas>
+                </div>
                 <div class="chart-container">
                     <div class="chart-title">Évolution CA par Année</div>
                     <canvas id="chart-cons-yoy-revenue"></canvas>
@@ -476,10 +508,12 @@
                 document.getElementById(`kpi-${year}-bookings`).textContent = formatNumber(yearData.kpis.total_bookings);
                 document.getElementById(`kpi-${year}-adr`).textContent = formatCurrency(yearData.kpis.avg_adr);
                 document.getElementById(`kpi-${year}-los`).textContent = formatNumber(yearData.kpis.avg_los, 1) + ' nuits';
+                document.getElementById(`kpi-${year}-occupancy`).textContent = formatNumber(yearData.kpis.avg_occupancy, 1) + '%';
                 document.getElementById(`kpi-${year}-leadtime`).textContent = formatNumber(yearData.kpis.avg_lead_time, 1) + ' jours';
 
                 // Charts
                 createRevenueChart(year, yearData);
+                createOccupancyChart(year, yearData);
                 createBookingsChart(year, yearData);
                 createSourceChart(year, yearData);
                 createLeadTimeChart(year, yearData);
@@ -498,9 +532,11 @@
             document.getElementById('kpi-cons-bookings').innerHTML = formatNumber(cons.total_bookings);
             document.getElementById('kpi-cons-adr').innerHTML = formatCurrency(cons.avg_adr);
             document.getElementById('kpi-cons-los').textContent = formatNumber(cons.avg_los, 1) + ' nuits';
+            document.getElementById('kpi-cons-occupancy').textContent = formatNumber(cons.avg_occupancy, 1) + '%';
             document.getElementById('kpi-cons-leadtime').textContent = formatNumber(cons.avg_lead_time, 1) + ' jours';
 
             // Consolidated charts
+            createYoYOccupancyChart();
             createYoYRevenueChart();
             createYoYBookingsChart();
             createConsolidatedSourceChart();
@@ -533,6 +569,40 @@
                             beginAtZero: true,
                             ticks: {
                                 callback: value => formatNumber(value / 1000) + 'K'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function createOccupancyChart(year, data) {
+            const ctx = document.getElementById(`chart-${year}-occupancy`).getContext('2d');
+            charts[`${year}-occupancy`] = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: dashboardData.months,
+                    datasets: [{
+                        label: 'Occupation (%)',
+                        data: data.occupancy,
+                        borderColor: '#8B7355',
+                        backgroundColor: 'rgba(139, 115, 85, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                callback: value => value + '%'
                             }
                         }
                     }
@@ -589,6 +659,48 @@
                                     const percentage = ((value / total) * 100).toFixed(1);
                                     return `${context.label}: ${formatCurrency(value)} (${percentage}%)`;
                                 }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function createYoYOccupancyChart() {
+            const occ2024 = dashboardData.yearly['2024'].kpis.avg_occupancy;
+            const occ2025 = dashboardData.yearly['2025'].kpis.avg_occupancy;
+            const occ2026 = dashboardData.yearly['2026'].kpis.avg_occupancy;
+            
+            const var2025 = calculateVariation(occ2025, occ2024);
+            const var2026 = calculateVariation(occ2026, occ2025);
+            
+            const ctx = document.getElementById('chart-cons-yoy-occupancy').getContext('2d');
+            charts['cons-yoy-occupancy'] = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: [
+                        '2024',
+                        `2025 (${var2025 > 0 ? '+' : ''}${var2025}%)`,
+                        `2026 YTD (${var2026 > 0 ? '+' : ''}${var2026}%)`
+                    ],
+                    datasets: [{
+                        label: 'Occupation (%)',
+                        data: [occ2024, occ2025, occ2026],
+                        backgroundColor: ['#C5A572', '#D4AF37', '#8B7355']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                callback: value => value + '%'
                             }
                         }
                     }
