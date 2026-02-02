@@ -12,9 +12,16 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --gold: #D4AF37;
+            --grey: #757575;
+            --light-gold: #F0E6D2;
+            --dark-grey: #4A4A4A;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--light-gold) 0%, #fff 100%);
             padding: 20px;
             min-height: 100vh;
         }
@@ -26,36 +33,43 @@
 
         header {
             background: white;
-            padding: 30px;
+            padding: 40px 30px;
             border-radius: 15px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             text-align: center;
         }
 
+        .logo {
+            width: 200px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
         h1 {
-            color: #2d3748;
-            font-size: 2.5em;
-            margin-bottom: 15px;
+            color: var(--grey);
+            font-size: 2em;
+            font-weight: 300;
+            letter-spacing: 2px;
         }
 
         .disclaimer {
-            background: #fff3cd;
-            border-left: 4px solid #ffc107;
-            padding: 15px 20px;
-            margin: 20px auto 0;
-            max-width: 900px;
-            text-align: left;
-            border-radius: 5px;
+            background: white;
+            border-left: 4px solid var(--gold);
+            padding: 20px 25px;
+            margin: 0 0 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
             font-size: 0.95em;
-            line-height: 1.6;
-            color: #856404;
+            line-height: 1.7;
+            color: var(--dark-grey);
         }
 
         .disclaimer strong {
             display: block;
             margin-bottom: 8px;
             font-size: 1.05em;
+            color: var(--gold);
         }
 
         .tabs {
@@ -68,24 +82,27 @@
 
         .tab-button {
             background: white;
-            border: none;
+            border: 2px solid var(--gold);
+            color: var(--grey);
             padding: 15px 30px;
             border-radius: 10px;
             font-size: 1.1em;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
         }
 
         .tab-button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+            background: var(--light-gold);
         }
 
         .tab-button.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--gold);
             color: white;
+            border-color: var(--gold);
         }
 
         .tab-content {
@@ -107,13 +124,14 @@
             background: white;
             padding: 25px;
             border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
             text-align: center;
+            border-top: 4px solid var(--gold);
         }
 
         .kpi-label {
             font-size: 0.9em;
-            color: #718096;
+            color: var(--grey);
             text-transform: uppercase;
             letter-spacing: 1px;
             margin-bottom: 10px;
@@ -122,7 +140,21 @@
         .kpi-value {
             font-size: 2em;
             font-weight: 700;
-            color: #2d3748;
+            color: var(--dark-grey);
+        }
+
+        .kpi-variation {
+            font-size: 0.9em;
+            margin-top: 8px;
+            font-weight: 600;
+        }
+
+        .kpi-variation.positive {
+            color: #48bb78;
+        }
+
+        .kpi-variation.negative {
+            color: #f56565;
         }
 
         .chart-grid {
@@ -136,13 +168,13 @@
             background: white;
             padding: 25px;
             border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
         }
 
         .chart-title {
             font-size: 1.3em;
             font-weight: 600;
-            color: #2d3748;
+            color: var(--dark-grey);
             margin-bottom: 20px;
             text-align: center;
         }
@@ -161,7 +193,11 @@
             }
 
             h1 {
-                font-size: 1.8em;
+                font-size: 1.5em;
+            }
+
+            .logo {
+                width: 150px;
             }
         }
     </style>
@@ -169,12 +205,14 @@
 <body>
     <div class="container">
         <header>
-            <h1>🏨 Palais Chadmi - Performance Dashboard</h1>
-            <div class="disclaimer">
-                <strong>📊 Scope des données</strong>
-                Nous avons mené une migration de notre PMS en décembre 2025 passant de Checkfront à Cloudbeds. Les données passées reprises par la migration ne concernent que les réservations ayant transité par le Channel Manager. Sont exclus : les réservations agences, les walk-in ou prolongation de séjour manuelle. Impact occupancy estimé à 8-10%.
-            </div>
+            <img src="logo.jpg" alt="Palais Chadmi" class="logo">
+            <h1>PERFORMANCE DASHBOARD</h1>
         </header>
+
+        <div class="disclaimer">
+            <strong>📊 Scope des données</strong>
+            Nous avons mené une migration de notre PMS en décembre 2025 passant de Checkfront à Cloudbeds. Les données passées reprises par la migration ne concernent que les réservations ayant transité par le Channel Manager. Sont exclus : les réservations agences, les walk-in ou prolongation de séjour manuelle. Impact occupancy estimé à 8-10%.
+        </div>
 
         <div class="tabs">
             <button class="tab-button active" onclick="switchTab('2024')">2024</button>
@@ -394,6 +432,18 @@
             }).format(value);
         }
 
+        function calculateVariation(current, previous) {
+            if (!previous || previous === 0) return null;
+            return ((current - previous) / previous * 100).toFixed(1);
+        }
+
+        function formatVariation(variation) {
+            if (variation === null) return '';
+            const sign = variation > 0 ? '+' : '';
+            const className = variation > 0 ? 'positive' : 'negative';
+            return `<div class="kpi-variation ${className}">${sign}${variation}% vs année précédente</div>`;
+        }
+
         function initializeDashboard() {
             // Initialize each year tab
             ['2024', '2025', '2026'].forEach(year => {
@@ -412,11 +462,18 @@
                 createSourceChart(year, yearData);
             });
 
-            // Consolidated KPIs
+            // Consolidated KPIs with variations
             const cons = dashboardData.consolidated;
-            document.getElementById('kpi-cons-revenue').textContent = formatCurrency(cons.total_revenue);
-            document.getElementById('kpi-cons-bookings').textContent = formatNumber(cons.total_bookings);
-            document.getElementById('kpi-cons-adr').textContent = formatCurrency(cons.avg_adr);
+            const yoy = cons.yoy_comparison;
+            
+            // Calculate variations 2024->2025 and 2025->2026
+            const revenueVar2025 = calculateVariation(yoy['2025'].revenue, yoy['2024'].revenue);
+            const bookingsVar2025 = calculateVariation(yoy['2025'].bookings, yoy['2024'].bookings);
+            const adrVar2025 = calculateVariation(yoy['2025'].adr, yoy['2024'].adr);
+            
+            document.getElementById('kpi-cons-revenue').innerHTML = formatCurrency(cons.total_revenue);
+            document.getElementById('kpi-cons-bookings').innerHTML = formatNumber(cons.total_bookings);
+            document.getElementById('kpi-cons-adr').innerHTML = formatCurrency(cons.avg_adr);
             document.getElementById('kpi-cons-los').textContent = formatNumber(cons.avg_los, 1) + ' nuits';
             document.getElementById('kpi-cons-leadtime').textContent = formatNumber(cons.avg_lead_time, 1) + ' jours';
 
@@ -436,8 +493,8 @@
                     datasets: [{
                         label: 'CA (MAD)',
                         data: data.revenue,
-                        borderColor: '#667eea',
-                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        borderColor: '#D4AF37',
+                        backgroundColor: 'rgba(212, 175, 55, 0.1)',
                         tension: 0.4,
                         fill: true
                     }]
@@ -469,7 +526,7 @@
                     datasets: [{
                         label: 'Réservations',
                         data: data.bookings,
-                        backgroundColor: '#764ba2'
+                        backgroundColor: '#757575'
                     }]
                 },
                 options: {
@@ -493,7 +550,7 @@
                     labels: ['OTA', 'Direct (NetAffinity)'],
                     datasets: [{
                         data: [data.source_split.OTA, data.source_split.Direct],
-                        backgroundColor: ['#667eea', '#48bb78']
+                        backgroundColor: ['#D4AF37', '#757575']
                     }]
                 },
                 options: {
@@ -518,19 +575,29 @@
 
         function createYoYRevenueChart() {
             const cons = dashboardData.consolidated;
+            const yoy = cons.yoy_comparison;
+            
+            // Calculate variations
+            const var2025 = calculateVariation(yoy['2025'].revenue, yoy['2024'].revenue);
+            const var2026 = calculateVariation(yoy['2026'].revenue, yoy['2025'].revenue);
+            
             const ctx = document.getElementById('chart-cons-yoy-revenue').getContext('2d');
             charts['cons-yoy-revenue'] = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: ['2024', '2025', '2026'],
+                    labels: [
+                        '2024', 
+                        `2025 (${var2025 > 0 ? '+' : ''}${var2025}%)`,
+                        `2026 YTD (${var2026 > 0 ? '+' : ''}${var2026}%)`
+                    ],
                     datasets: [{
                         label: 'CA (MAD)',
                         data: [
-                            cons.yoy_comparison['2024'].revenue,
-                            cons.yoy_comparison['2025'].revenue,
-                            cons.yoy_comparison['2026'].revenue
+                            yoy['2024'].revenue,
+                            yoy['2025'].revenue,
+                            yoy['2026'].revenue
                         ],
-                        backgroundColor: ['#667eea', '#764ba2', '#48bb78']
+                        backgroundColor: ['#D4AF37', '#B8941F', '#757575']
                     }]
                 },
                 options: {
@@ -553,19 +620,29 @@
 
         function createYoYBookingsChart() {
             const cons = dashboardData.consolidated;
+            const yoy = cons.yoy_comparison;
+            
+            // Calculate variations
+            const var2025 = calculateVariation(yoy['2025'].bookings, yoy['2024'].bookings);
+            const var2026 = calculateVariation(yoy['2026'].bookings, yoy['2025'].bookings);
+            
             const ctx = document.getElementById('chart-cons-yoy-bookings').getContext('2d');
             charts['cons-yoy-bookings'] = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: ['2024', '2025', '2026'],
+                    labels: [
+                        '2024',
+                        `2025 (${var2025 > 0 ? '+' : ''}${var2025}%)`,
+                        `2026 YTD (${var2026 > 0 ? '+' : ''}${var2026}%)`
+                    ],
                     datasets: [{
                         label: 'Réservations',
                         data: [
-                            cons.yoy_comparison['2024'].bookings,
-                            cons.yoy_comparison['2025'].bookings,
-                            cons.yoy_comparison['2026'].bookings
+                            yoy['2024'].bookings,
+                            yoy['2025'].bookings,
+                            yoy['2026'].bookings
                         ],
-                        backgroundColor: ['#667eea', '#764ba2', '#48bb78']
+                        backgroundColor: ['#D4AF37', '#B8941F', '#757575']
                     }]
                 },
                 options: {
@@ -590,7 +667,7 @@
                     labels: ['OTA', 'Direct (NetAffinity)'],
                     datasets: [{
                         data: [cons.source_split.OTA, cons.source_split.Direct],
-                        backgroundColor: ['#667eea', '#48bb78']
+                        backgroundColor: ['#D4AF37', '#757575']
                     }]
                 },
                 options: {
@@ -628,7 +705,7 @@
                             cons.lead_time_distribution['J-60'],
                             cons.lead_time_distribution['J-90+']
                         ],
-                        backgroundColor: ['#f56565', '#ed8936', '#ecc94b', '#48bb78']
+                        backgroundColor: ['#f56565', '#ed8936', '#D4AF37', '#48bb78']
                     }]
                 },
                 options: {
