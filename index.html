@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Palais Chadmi - Performance Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .kpi-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .kpi-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .kpi-label {
+            font-size: 0.9em;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+        
+        .kpi-value {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .kpi-change {
+            font-size: 0.9em;
+            color: #10b981;
+        }
+        
+        .kpi-change.negative {
+            color: #ef4444;
+        }
+        
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .chart-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        
+        .chart-title {
+            font-size: 1.4em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 350px;
+        }
+        
+        .full-width {
+            grid-column: 1 / -1;
+        }
+        
+        @media (max-width: 768px) {
+            .chart-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏨 Palais Chadmi</h1>
+            <p>Performance Dashboard 2024-2026</p>
+        </div>
+        
+        <div class="kpi-grid" id="kpiGrid"></div>
+        
+        <div class="chart-grid">
+            <div class="chart-card full-width">
+                <h3 class="chart-title">Évolution du Chiffre d'Affaires</h3>
+                <div class="chart-container">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="chart-card">
+                <h3 class="chart-title">Taux d'Occupation</h3>
+                <div class="chart-container">
+                    <canvas id="occupancyChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="chart-card">
+                <h3 class="chart-title">ADR Moyen</h3>
+                <div class="chart-container">
+                    <canvas id="adrChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="chart-card full-width">
+                <h3 class="chart-title">Nombre de Réservations</h3>
+                <div class="chart-container">
+                    <canvas id="bookingsChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Fetch data
+        fetch('data.json')
+            .then(response => response.json())
+            .then(data => {
+                renderKPIs(data);
+                renderCharts(data);
+            });
+        
+        function renderKPIs(data) {
+            const kpiGrid = document.getElementById('kpiGrid');
+            
+            // Calculate totals for each year
+            const years = ['2024', '2025', '2026'];
+            const kpis = [];
+            
+            years.forEach(year => {
+                const totalRev = data.revenue[year].reduce((a, b) => a + b, 0);
+                const totalBookings = data.bookings[year].reduce((a, b) => a + b, 0);
+                const avgOcc = data.occupancy[year].reduce((a, b) => a + b, 0) / 12;
+                const nonZeroAdr = data.adr[year].filter(x => x > 0);
+                const avgAdr = nonZeroAdr.reduce((a, b) => a + b, 0) / nonZeroAdr.length;
+                
+                kpis.push({
+                    year,
+                    revenue: totalRev,
+                    bookings: totalBookings,
+                    occupancy: avgOcc,
+                    adr: avgAdr
+                });
+            });
+            
+            // Calculate year-over-year changes for 2025
+            const revChange2025 = ((kpis[1].revenue - kpis[0].revenue) / kpis[0].revenue * 100).toFixed(1);
+            const occChange2025 = (kpis[1].occupancy - kpis[0].occupancy).toFixed(1);
+            
+            // Create KPI cards for 2025 (best year)
+            const kpiCards = [
+                {
+                    label: 'CA Total 2025',
+                    value: `${(kpis[1].revenue / 1000000).toFixed(2)}M MAD`,
+                    change: `+${revChange2025}% vs 2024`
+                },
+                {
+                    label: 'Réservations 2025',
+                    value: kpis[1].bookings.toLocaleString(),
+                    change: `${((kpis[1].bookings - kpis[0].bookings) / kpis[0].bookings * 100).toFixed(1)}% vs 2024`
+                },
+                {
+                    label: 'Occupation Moyenne 2025',
+                    value: `${kpis[1].occupancy.toFixed(1)}%`,
+                    change: `+${occChange2025}pts vs 2024`
+                },
+                {
+                    label: 'ADR Moyen 2025',
+                    value: `${kpis[1].adr.toFixed(0)} MAD`,
+                    change: `+${((kpis[1].adr - kpis[0].adr) / kpis[0].adr * 100).toFixed(1)}% vs 2024`
+                }
+            ];
+            
+            kpiCards.forEach(kpi => {
+                const card = document.createElement('div');
+                card.className = 'kpi-card';
+                const changeClass = kpi.change.startsWith('+') ? '' : 'negative';
+                
+                card.innerHTML = `
+                    <div class="kpi-label">${kpi.label}</div>
+                    <div class="kpi-value">${kpi.value}</div>
+                    <div class="kpi-change ${changeClass}">${kpi.change}</div>
+                `;
+                
+                kpiGrid.appendChild(card);
+            });
+        }
+        
+        function renderCharts(data) {
+            const colors = {
+                '2024': '#10b981',
+                '2025': '#3b82f6',
+                '2026': '#8b5cf6'
+            };
+            
+            // Revenue Chart
+            new Chart(document.getElementById('revenueChart'), {
+                type: 'line',
+                data: {
+                    labels: data.months,
+                    datasets: data.years.map(year => ({
+                        label: year,
+                        data: data.revenue[year],
+                        borderColor: colors[year],
+                        backgroundColor: colors[year] + '20',
+                        tension: 0.4,
+                        fill: true
+                    }))
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: value => (value / 1000).toFixed(0) + 'K'
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Occupancy Chart
+            new Chart(document.getElementById('occupancyChart'), {
+                type: 'bar',
+                data: {
+                    labels: data.months,
+                    datasets: data.years.map(year => ({
+                        label: year,
+                        data: data.occupancy[year],
+                        backgroundColor: colors[year]
+                    }))
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                callback: value => value + '%'
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // ADR Chart
+            new Chart(document.getElementById('adrChart'), {
+                type: 'line',
+                data: {
+                    labels: data.months,
+                    datasets: data.years.map(year => ({
+                        label: year,
+                        data: data.adr[year],
+                        borderColor: colors[year],
+                        tension: 0.4
+                    }))
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: value => value.toFixed(0) + ' MAD'
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Bookings Chart
+            new Chart(document.getElementById('bookingsChart'), {
+                type: 'bar',
+                data: {
+                    labels: data.months,
+                    datasets: data.years.map(year => ({
+                        label: year,
+                        data: data.bookings[year],
+                        backgroundColor: colors[year]
+                    }))
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
