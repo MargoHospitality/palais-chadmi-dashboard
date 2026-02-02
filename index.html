@@ -147,6 +147,13 @@
             color: var(--dark-grey);
         }
 
+        .kpi-note {
+            font-size: 0.75em;
+            color: var(--grey);
+            margin-top: 5px;
+            font-style: italic;
+        }
+
         .kpi-variation {
             font-size: 0.9em;
             margin-top: 8px;
@@ -508,7 +515,15 @@
                 document.getElementById(`kpi-${year}-bookings`).textContent = formatNumber(yearData.kpis.total_bookings);
                 document.getElementById(`kpi-${year}-adr`).textContent = formatCurrency(yearData.kpis.avg_adr);
                 document.getElementById(`kpi-${year}-los`).textContent = formatNumber(yearData.kpis.avg_los, 1) + ' nuits';
-                document.getElementById(`kpi-${year}-occupancy`).textContent = formatNumber(yearData.kpis.avg_occupancy, 1) + '%';
+                
+                // Occupancy with note for 2026
+                const occupancyValue = formatNumber(yearData.kpis.avg_occupancy, 1) + '%';
+                if (year === '2026') {
+                    document.getElementById(`kpi-${year}-occupancy`).innerHTML = occupancyValue + '<div class="kpi-note">(Janvier-Février)</div>';
+                } else {
+                    document.getElementById(`kpi-${year}-occupancy`).textContent = occupancyValue;
+                }
+                
                 document.getElementById(`kpi-${year}-leadtime`).textContent = formatNumber(yearData.kpis.avg_lead_time, 1) + ' jours';
 
                 // Charts

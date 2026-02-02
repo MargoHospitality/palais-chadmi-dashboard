@@ -191,7 +191,7 @@
         "avg_adr": 1343.0,
         "avg_los": 3.25,
         "avg_lead_time": 66.0,
-        "avg_occupancy": 32.71
+        "avg_occupancy": 76.72
       },
       "occupancy": [
         80.24,
@@ -257,6 +257,6 @@
         "revenue": 670841.15
       }
     ],
-    "avg_occupancy": 52.52
+    "avg_occupancy": 61.24
   }
 }
