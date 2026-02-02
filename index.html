@@ -512,7 +512,7 @@
                 const yearData = dashboardData.yearly[year];
                 
                 // KPIs
-                document.getElementById(`kpi-${year}-revenue`).textContent = formatNumber(yearData.kpis.total_revenue / 1000000, 2) + ' M MAD';
+                document.getElementById(`kpi-${year}-revenue`).textContent = formatNumber(yearData.kpis.total_revenue / 1000, 0) + ' K MAD';
                 document.getElementById(`kpi-${year}-bookings`).textContent = formatNumber(yearData.kpis.total_bookings);
                 document.getElementById(`kpi-${year}-adr`).textContent = formatNumber(yearData.kpis.avg_adr, 0) + ' MAD';
                 document.getElementById(`kpi-${year}-los`).textContent = formatNumber(yearData.kpis.avg_los, 1) + ' nuits';
@@ -544,7 +544,7 @@
             const bookingsVar2025 = calculateVariation(yoy['2025'].bookings, yoy['2024'].bookings);
             const adrVar2025 = calculateVariation(yoy['2025'].adr, yoy['2024'].adr);
             
-            document.getElementById('kpi-cons-revenue').innerHTML = formatNumber(cons.total_revenue / 1000000, 2) + ' M MAD';
+            document.getElementById('kpi-cons-revenue').innerHTML = formatNumber(cons.total_revenue / 1000, 0) + ' K MAD';
             document.getElementById('kpi-cons-bookings').innerHTML = formatNumber(cons.total_bookings);
             document.getElementById('kpi-cons-adr').innerHTML = formatNumber(cons.avg_adr, 0) + ' MAD';
             document.getElementById('kpi-cons-los').textContent = formatNumber(cons.avg_los, 1) + ' nuits';
